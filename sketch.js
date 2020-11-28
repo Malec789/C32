@@ -7,11 +7,13 @@ var engine, world;
 var box1, pig1,pig3;
 var backgroundImg,platform;
 var bird, slingshot;
+var score = 0;
 
 var gameState = "onSling";
 
 function preload() {
-    backgroundImg = loadImage("sprites/bg.png");
+   //backgroundImg = loadImage("sprites/bg.png");
+    getbkgImg();
 }
 
 function setup(){
@@ -45,34 +47,41 @@ function setup(){
 }
 
 function draw(){
-    background(backgroundImg);
-    Engine.update(engine);
-    //strokeWeight(4);
-    box1.display();
-    box2.display();
-    ground.display();
-    pig1.display();
-    log1.display();
+    if (backgroundImg){
+        background(backgroundImg);
+        box1.display();
+        box2.display();
+        ground.display();
+        pig1.display();
+        pig1.score();
+        log1.display();
+    
+        box3.display();
+        box4.display();
+        pig3.display();
+        pig3.score();
+        log3.display();
+    
+        box5.display();
+        log4.display();
+        log5.display();
+    
+        bird.display();
+        platform.display();
+        slingshot.display(); 
+        
+        textSize(35);
+        fill("white");
+        text("Score: " + score, 900, 50);
+    }
 
-    box3.display();
-    box4.display();
-    pig3.display();
-    log3.display();
-
-    box5.display();
-    log4.display();
-    log5.display();
-
-    bird.display();
-    platform.display();
-    //log6.display();
-    slingshot.display();    
+    Engine.update(engine);  
 }
 
 function mouseDragged(){
-    if (gameState!=="launched"){
+    //if (gameState!=="launched"){
         Matter.Body.setPosition(bird.body, {x: mouseX , y: mouseY});
-    }
+    //}
 }
 
 
@@ -85,4 +94,20 @@ function keyPressed(){
     if(keyCode === 32){
        // slingshot.attach(bird.body);
     }
+}
+
+async function getbkgImg(){
+    var response = await fetch("http://worldtimeapi.org/api/timezone/Asia/Kolkata");
+    var responseJson = await response.json();
+    var datetime = responseJson.datetime;
+    var hour = datetime.slice(11, 13);
+    console.log(hour);
+
+    if (hour > 6 && hour < 16){
+        bg = "sprites/bg.png";        
+    } else {
+        bg = "sprites/bg2.jpg";
+    }
+
+    backgroundImg = loadImage(bg);
 }
